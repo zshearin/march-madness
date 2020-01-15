@@ -14,10 +14,9 @@ func main() {
 
 	//Read in variables
 	var number1, number2 = os.Args[1], os.Args[2]
-	var sum int
-	//Pass to int from string
 	num1, err1 := strconv.Atoi(number1)
 	num2, err2 := strconv.Atoi(number2)
+
 	if err1 != nil {
 		fmt.Println("First argument given is not a number")
 		return
@@ -33,30 +32,59 @@ func main() {
 		num2 = temp
 	}
 
-	sum = num1 + num2
-	var threshold, random float64
-
 	//Generate threshold and random number to assess against (probability based on seed value)
+	threshold := calculateThreshold(num1, num2)
+	random := getRandomNumber()
 
-	threshold = float64(num2) / float64(sum)
+	printSeedingCalculations(random, threshold)
+	printWinner(num1, num2, random, threshold)
+}
+
+
+func getRandomNumber() float64 {
 	rand.Seed(time.Now().UnixNano())
-        random = rand.Float64()
+	random := rand.Float64()
+	return random
+}
 
-	//Print out calculated values
-	fmt.Printf("Sum: %d\n", sum)
-	fmt.Printf("=====================================================\n")
-	fmt.Printf("Threshold: %f = %d / %d (higher seed over total)\n", threshold, num2, sum)
-	fmt.Printf("Random #:  %f           (if lower than threshold, lower seed wins)\n", random)
-	fmt.Printf("=====================================================\n")
-
-	//Assess random value relative to threshold
-	// For a 1 and 16 seed matchup, the 1 seed has a 16/17 chance
-	// of winning and the 16 seed has a 1/17 chance
-
-	if random < threshold {
-		fmt.Printf("seed %d wins", num1)
-	} else {
-		fmt.Printf("seed %d wins (yikes)", num2)
+//Assess random value relative to threshold
+// For a 1 and 16 seed matchup, the 1 seed has a 16/17 chance
+// of winning and the 16 seed has a 1/17 chance
+func calculateThreshold(num1, num2 int) float64 {
+	sum := num1 + num2
+	if num1 > num2 {
+		num2 = num1
 	}
+	threshold := float64(num2) / float64(sum)
+	return threshold
+}
+
+func printWinner(num1, num2 int, random, threshold float64) {
+        if random < threshold {
+                fmt.Printf("Seed %d wins", num1)
+        } else {
+		phrase := getPhrase(num2 - num1)
+		fmt.Printf("Seed %d wins - %s", num2, phrase)
+        }
+}
+
+func getPhrase(difference int) string {
+	if difference > 9 {
+		return "and your bracket is done"
+	} else if difference > 5 {
+		return "crazy prediction here"
+	} else if difference > 3 {
+		return "quality upset prediction"
+	} else {
+		return "barely an upset"
+	}
+}
+
+func printSeedingCalculations(random, threshold float64) {
+	//Print out calculated values
+        fmt.Printf("==============================================================\n")
+	fmt.Printf("Threshold: %f\n", threshold)
+	fmt.Printf("Random # : %f (if lower than threshold, lower seed wins)\n", random)
+        fmt.Printf("==============================================================\n")
 
 }
