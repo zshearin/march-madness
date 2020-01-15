@@ -7,6 +7,11 @@ import "strconv"
 import "time"
 
 func main() {
+	if len(os.Args) < 3 {
+		fmt.Println("Need at least two arguments")
+		return
+	}
+
 	//Read in variables
 	var number1, number2 = os.Args[1], os.Args[2]
 	var sum int
@@ -14,8 +19,12 @@ func main() {
 	num1, err1 := strconv.Atoi(number1)
 	num2, err2 := strconv.Atoi(number2)
 	if err1 != nil {
+		fmt.Println("First argument given is not a number")
+		return
 	}
 	if err2 != nil {
+		fmt.Println("Second argument given is not a number")
+		return
 	}
 	//make num1 the smaller number and num2 the bigger number (seeding processing later)
 	if num1 > num2 {
