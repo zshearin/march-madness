@@ -1,14 +1,16 @@
 package main
 
-import "os"
-import "fmt"
-import "math/rand"
-import "strconv"
-import "time"
+import (
+	"fmt"
+	"math/rand"
+	"os"
+	"strconv"
+	"time"
+)
 
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Println("Need at least two arguments")
+	if len(os.Args) != 3 {
+		fmt.Println("Need exactly two arguments")
 		return
 	}
 
@@ -40,7 +42,6 @@ func main() {
 	printWinner(num1, num2, random, threshold)
 }
 
-
 func getRandomNumber() float64 {
 	rand.Seed(time.Now().UnixNano())
 	random := rand.Float64()
@@ -60,12 +61,12 @@ func calculateThreshold(num1, num2 int) float64 {
 }
 
 func printWinner(num1, num2 int, random, threshold float64) {
-        if random < threshold {
-                fmt.Printf("Seed %d wins", num1)
-        } else {
+	if random < threshold {
+		fmt.Printf("Seed %d wins", num1)
+	} else {
 		phrase := getPhrase(num2 - num1)
 		fmt.Printf("Seed %d wins - %s", num2, phrase)
-        }
+	}
 }
 
 func getPhrase(difference int) string {
@@ -82,9 +83,9 @@ func getPhrase(difference int) string {
 
 func printSeedingCalculations(random, threshold float64) {
 	//Print out calculated values
-        fmt.Printf("==============================================================\n")
+	fmt.Printf("==============================================================\n")
 	fmt.Printf("Threshold: %f\n", threshold)
 	fmt.Printf("Random # : %f (if lower than threshold, lower seed wins)\n", random)
-        fmt.Printf("==============================================================\n")
+	fmt.Printf("==============================================================\n")
 
 }
