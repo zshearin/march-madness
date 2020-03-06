@@ -3,30 +3,65 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"os"
-	"strconv"
 	"time"
 )
 
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Println("Need exactly two arguments")
-		return
-	}
+	/*
+		if len(os.Args) != 3 {
+			fmt.Println("Need exactly two arguments")
+			return
+		}
 
-	//Read in variables
-	var number1, number2 = os.Args[1], os.Args[2]
-	num1, err1 := strconv.Atoi(number1)
-	num2, err2 := strconv.Atoi(number2)
+		//Read in variables
+		var number1, number2 = os.Args[1], os.Args[2]
+		num1, err1 := strconv.Atoi(number1)
+		num2, err2 := strconv.Atoi(number2)
 
-	if err1 != nil {
-		fmt.Println("First argument given is not a number")
-		return
+		if err1 != nil {
+			fmt.Println("First argument given is not a number")
+			return
+		}
+		if err2 != nil {
+			fmt.Println("Second argument given is not a number")
+			return
+		}
+	*/
+	/*
+
+		matchups [][]int{
+			//1, 16
+			//2, 15
+			//3, 14
+			//4, 13
+			//5, 12
+			//6, 11
+			//7, 10
+			//8, 9
+		}
+	*/
+	var round1Winners []int
+
+	for i := 0; i < 8; i++ {
+		lowerSeed := i + 1
+		higherSeed := 17 - lowerSeed
+
+		result := upsetOrNot(lowerSeed, higherSeed)
+		fmt.Println(result)
+
+		if result {
+			round1Winners = append(round1Winners, lowerSeed)
+		} else {
+			round1Winners = append(round1Winners, higherSeed)
+		}
+
 	}
-	if err2 != nil {
-		fmt.Println("Second argument given is not a number")
-		return
-	}
+	fmt.Println(round1Winners)
+
+}
+
+func upsetOrNot(num1, num2 int) bool {
+
 	//make num1 the smaller number and num2 the bigger number (seeding processing later)
 	if num1 > num2 {
 		temp := num1
@@ -38,8 +73,11 @@ func main() {
 	threshold := calculateThreshold(num1, num2)
 	random := getRandomNumber()
 
-	printSeedingCalculations(random, threshold)
-	printWinner(num1, num2, random, threshold)
+	//	printSeedingCalculations(random, threshold)
+	//	printWinner(num1, num2, random, threshold)
+
+	return random < threshold
+
 }
 
 func getRandomNumber() float64 {
@@ -62,10 +100,10 @@ func calculateThreshold(num1, num2 int) float64 {
 
 func printWinner(num1, num2 int, random, threshold float64) {
 	if random < threshold {
-		fmt.Printf("Seed %d wins", num1)
+		fmt.Printf("Seed %d wins\n", num1)
 	} else {
 		phrase := getPhrase(num2 - num1)
-		fmt.Printf("Seed %d wins - %s", num2, phrase)
+		fmt.Printf("Seed %d wins - %s\n", num2, phrase)
 	}
 }
 
