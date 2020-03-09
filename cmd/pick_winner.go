@@ -3,30 +3,138 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"os"
-	"strconv"
 	"time"
 )
 
+//Matchup denotes a matchup
+type Matchup struct {
+	LowerSeed  int
+	HigherSeed int
+}
+
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Println("Need exactly two arguments")
-		return
+
+	rand.Seed(time.Now().UnixNano())
+
+	regions := []string{"Midwest", "South", "West", "East"}
+	var finalFour []int
+	for _, regionName := range regions {
+		winner := runRegionSimulation(regionName)
+
+		finalFour = append(finalFour, winner)
+
 	}
 
-	//Read in variables
-	var number1, number2 = os.Args[1], os.Args[2]
-	num1, err1 := strconv.Atoi(number1)
-	num2, err2 := strconv.Atoi(number2)
+	for index, regionName := range regions {
 
-	if err1 != nil {
-		fmt.Println("First argument given is not a number")
-		return
+		fmt.Printf("%s winner: %d\n", regionName, finalFour[index])
+
 	}
-	if err2 != nil {
-		fmt.Println("Second argument given is not a number")
-		return
+
+}
+
+func runRegionSimulation(region string) int {
+
+	fmt.Printf("%s region results: \n", region)
+	var confSeeds []int
+	for i := 0; i < 16; i++ {
+		seed := i + 1
+		confSeeds = append(confSeeds, seed)
+
 	}
+
+	r1m := GetMatchups(confSeeds)
+	r1r := GetMatchupResults(r1m)
+
+	PrintMatchupsAndResults(r1m, r1r, 1)
+
+	r2m := GetMatchups(r1r)
+	r2r := GetMatchupResults(r2m)
+
+	PrintMatchupsAndResults(r2m, r2r, 2)
+
+	r3m := GetMatchups(r2r)
+	r3r := GetMatchupResults(r3m)
+
+	PrintMatchupsAndResults(r3m, r3r, 3)
+
+	r4m := GetMatchups(r3r)
+	r4r := GetMatchupResults(r4m)
+
+	PrintMatchupsAndResults(r4m, r4r, 4)
+
+	fmt.Printf("\n\n\n")
+	return r4r[0]
+
+}
+
+//PrintMatchupsAndResults prints the matchup results
+func PrintMatchupsAndResults(matchups []Matchup, results []int, roundNumber int) {
+
+	fmt.Println("======================================")
+	fmt.Printf("Round %d matchups and results:\n", roundNumber)
+	fmt.Println(matchups)
+	fmt.Println(results)
+	fmt.Println("======================================")
+
+}
+
+//GetMatchupResults gets the result array from the provided matchup
+func GetMatchupResults(matchups []Matchup) []int {
+
+	var results []int
+
+	for _, matchup := range matchups {
+
+		lowerSeed := matchup.LowerSeed
+		higherSeed := matchup.HigherSeed
+
+		result := notAnUpset(lowerSeed, higherSeed)
+
+		if result {
+			results = append(results, lowerSeed)
+		} else {
+			results = append(results, higherSeed)
+		}
+	}
+
+	return results
+
+}
+
+//GetMatchups gets the matchups from the int array
+func GetMatchups(round1Results []int) []Matchup {
+
+	//
+	var matchups []Matchup
+
+	for len(round1Results) > 1 {
+
+		var first, last int
+
+		first, round1Results = round1Results[0], round1Results[1:]
+
+		last, round1Results = round1Results[len(round1Results)-1], round1Results[:len(round1Results)-1]
+
+		var curMatchup Matchup
+		if first < last {
+			curMatchup.LowerSeed = first
+			curMatchup.HigherSeed = last
+		} else {
+			curMatchup.LowerSeed = last
+			curMatchup.HigherSeed = first
+		}
+
+		matchups = append(matchups, curMatchup)
+	}
+
+	return matchups
+
+}
+
+//returns true if results expected (not an upset)
+func notAnUpset(num1, num2 int) bool {
+
 	//make num1 the smaller number and num2 the bigger number (seeding processing later)
 	if num1 > num2 {
 		temp := num1
@@ -38,12 +146,14 @@ func main() {
 	threshold := calculateThreshold(num1, num2)
 	random := getRandomNumber()
 
-	printSeedingCalculations(random, threshold)
-	printWinner(num1, num2, random, threshold)
+	//	printSeedingCalculations(random, threshold)
+	//	printWinner(num1, num2, random, threshold)
+
+	return random < threshold
+
 }
 
 func getRandomNumber() float64 {
-	rand.Seed(time.Now().UnixNano())
 	random := rand.Float64()
 	return random
 }
@@ -58,34 +168,4 @@ func calculateThreshold(num1, num2 int) float64 {
 	}
 	threshold := float64(num2) / float64(sum)
 	return threshold
-}
-
-func printWinner(num1, num2 int, random, threshold float64) {
-	if random < threshold {
-		fmt.Printf("Seed %d wins", num1)
-	} else {
-		phrase := getPhrase(num2 - num1)
-		fmt.Printf("Seed %d wins - %s", num2, phrase)
-	}
-}
-
-func getPhrase(difference int) string {
-	if difference > 9 {
-		return "and your bracket is done"
-	} else if difference > 5 {
-		return "crazy prediction here"
-	} else if difference > 3 {
-		return "quality upset prediction"
-	} else {
-		return "barely an upset"
-	}
-}
-
-func printSeedingCalculations(random, threshold float64) {
-	//Print out calculated values
-	fmt.Printf("==============================================================\n")
-	fmt.Printf("Threshold: %f\n", threshold)
-	fmt.Printf("Random # : %f (if lower than threshold, lower seed wins)\n", random)
-	fmt.Printf("==============================================================\n")
-
 }
