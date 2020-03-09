@@ -18,16 +18,16 @@ func main() {
 
 	regions := []string{"Midwest", "South", "West", "East"}
 	var finalFour []int
-	for _, value := range regions {
-		winner := runRegionSimulation(value)
+	for _, regionName := range regions {
+		winner := runRegionSimulation(regionName)
 
 		finalFour = append(finalFour, winner)
 
 	}
 
-	for key, value := range regions {
+	for index, regionName := range regions {
 
-		fmt.Printf("%s winner: %d\n", value, finalFour[key])
+		fmt.Printf("%s winner: %d\n", regionName, finalFour[index])
 
 	}
 
@@ -43,23 +43,23 @@ func runRegionSimulation(region string) int {
 
 	}
 
-	round1Matchups := GetMatchups(confSeeds)
-	round1Results := GetResultsArrayFromMatchups(round1Matchups)
+	r1m := GetMatchups(confSeeds)
+	r1r := GetMatchupResults(r1m)
 
-	PrintMatchupsAndResults(round1Matchups, round1Results, 1)
+	PrintMatchupsAndResults(r1m, r1r, 1)
 
-	round2Matchups := GetMatchups(round1Results)
-	round2Results := GetResultsArrayFromMatchups(round2Matchups)
+	r2m := GetMatchups(r1r)
+	r2r := GetMatchupResults(r2m)
 
-	PrintMatchupsAndResults(round2Matchups, round2Results, 2)
+	PrintMatchupsAndResults(r2m, r2r, 2)
 
-	round3Matchups := GetMatchups(round2Results)
-	round3Results := GetResultsArrayFromMatchups(round3Matchups)
+	r3m := GetMatchups(r2r)
+	r3r := GetMatchupResults(r3m)
 
-	PrintMatchupsAndResults(round3Matchups, round3Results, 3)
+	PrintMatchupsAndResults(r3m, r3r, 3)
 
-	r4m := GetMatchups(round3Results)
-	r4r := GetResultsArrayFromMatchups(r4m)
+	r4m := GetMatchups(r3r)
+	r4r := GetMatchupResults(r4m)
 
 	PrintMatchupsAndResults(r4m, r4r, 4)
 
@@ -79,8 +79,8 @@ func PrintMatchupsAndResults(matchups []Matchup, results []int, roundNumber int)
 
 }
 
-//GetResultsArrayFromMatchups gets the result array from the provided matchup
-func GetResultsArrayFromMatchups(matchups []Matchup) []int {
+//GetMatchupResults gets the result array from the provided matchup
+func GetMatchupResults(matchups []Matchup) []int {
 
 	var results []int
 
