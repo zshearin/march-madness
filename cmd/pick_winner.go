@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -27,15 +28,20 @@ func main() {
 
 	for index, regionName := range regions {
 
-		fmt.Printf("%s winner: %d\n", regionName, finalFour[index])
+		space := strings.Repeat(" ", 8-len(regionName))
+
+		fmt.Printf("%s winner: %s%d\n", regionName, space, finalFour[index])
 
 	}
 
 }
 
 func runRegionSimulation(region string) int {
-
+	fmt.Println("==========================================================")
+	underline := strings.Repeat("-", 16+len(region))
 	fmt.Printf("%s region results: \n", region)
+	fmt.Println(underline)
+
 	var confSeeds []int
 	for i := 0; i < 16; i++ {
 		seed := i + 1
@@ -44,38 +50,39 @@ func runRegionSimulation(region string) int {
 	}
 
 	r1m := GetMatchups(confSeeds)
+	//	PrintRoundMatchups(r1m, 1)
+
 	r1r := GetMatchupResults(r1m)
-
-	PrintMatchupsAndResults(r1m, r1r, 1)
-
 	r2m := GetMatchups(r1r)
+	PrintRoundMatchups(r2m, 2)
+
 	r2r := GetMatchupResults(r2m)
-
-	PrintMatchupsAndResults(r2m, r2r, 2)
-
 	r3m := GetMatchups(r2r)
+	PrintRoundMatchups(r3m, 3)
+
 	r3r := GetMatchupResults(r3m)
-
-	PrintMatchupsAndResults(r3m, r3r, 3)
-
 	r4m := GetMatchups(r3r)
+	PrintRoundMatchups(r4m, 4)
+
 	r4r := GetMatchupResults(r4m)
 
-	PrintMatchupsAndResults(r4m, r4r, 4)
+	winner := r4r[0]
+	fmt.Printf("Winner of region: %d\n\n", winner)
 
-	fmt.Printf("\n\n\n")
-	return r4r[0]
+	return winner
 
 }
 
-//PrintMatchupsAndResults prints the matchup results
-func PrintMatchupsAndResults(matchups []Matchup, results []int, roundNumber int) {
+//PrintRoundMatchups prints the matchups for a round
+func PrintRoundMatchups(matchups []Matchup, roundNumber int) {
 
-	fmt.Println("======================================")
-	fmt.Printf("Round %d matchups and results:\n", roundNumber)
-	fmt.Println(matchups)
-	fmt.Println(results)
-	fmt.Println("======================================")
+	fmt.Printf("Round %d matchups: ", roundNumber)
+
+	for _, value := range matchups {
+		fmt.Printf("%d vs. %d   ", value.LowerSeed, value.HigherSeed)
+	}
+	fmt.Printf("\n")
+	//	fmt.Println(matchups)
 
 }
 
@@ -145,10 +152,6 @@ func notAnUpset(num1, num2 int) bool {
 	//Generate threshold and random number to assess against (probability based on seed value)
 	threshold := calculateThreshold(num1, num2)
 	random := getRandomNumber()
-
-	//	printSeedingCalculations(random, threshold)
-	//	printWinner(num1, num2, random, threshold)
-
 	return random < threshold
 
 }
