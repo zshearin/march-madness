@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -27,13 +28,17 @@ func main() {
 
 	for index, regionName := range regions {
 
-		fmt.Printf("%s winner: %d\n", regionName, finalFour[index])
+		space := strings.Repeat(" ", 8-len(regionName))
+
+		fmt.Printf("%s winner: %s%d\n", regionName, space, finalFour[index])
 
 	}
 
 }
 
 func runRegionSimulation(region string) int {
+	fmt.Println("===================================================")
+	fmt.Println("===================================================")
 
 	fmt.Printf("%s region results: \n", region)
 	var confSeeds []int
@@ -63,7 +68,7 @@ func runRegionSimulation(region string) int {
 
 	PrintMatchupsAndResults(r4m, r4r, 4)
 
-	fmt.Printf("\n\n\n")
+	fmt.Printf("\n")
 	return r4r[0]
 
 }
@@ -72,10 +77,9 @@ func runRegionSimulation(region string) int {
 func PrintMatchupsAndResults(matchups []Matchup, results []int, roundNumber int) {
 
 	fmt.Println("======================================")
-	fmt.Printf("Round %d matchups and results:\n", roundNumber)
+	fmt.Printf("Round %d matchups:\n", roundNumber)
 	fmt.Println(matchups)
-	fmt.Println(results)
-	fmt.Println("======================================")
+	//	fmt.Println(results)
 
 }
 
