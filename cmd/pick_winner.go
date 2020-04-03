@@ -18,6 +18,7 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	regions := []string{"Midwest", "South", "West", "East"}
+
 	var finalFour []int
 	for _, regionName := range regions {
 		winner := runRegionSimulation(regionName)
@@ -26,14 +27,7 @@ func main() {
 
 	}
 
-	for index, regionName := range regions {
-
-		space := strings.Repeat(" ", 8-len(regionName))
-
-		fmt.Printf("%s winner: %s%d\n", regionName, space, finalFour[index])
-
-	}
-
+	CalculateAndPrintFinalFourResults(finalFour, regions)
 }
 
 func runRegionSimulation(region string) int {
