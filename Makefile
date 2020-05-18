@@ -1,5 +1,5 @@
 build:
-	go build ./cmd/pick_winner.go
+	go build ./predict
 
 run:
-	go run ./cmd/pick_winner.go
+	go run ./predict
