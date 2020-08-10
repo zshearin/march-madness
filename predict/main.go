@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -17,36 +19,67 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	regions := []string{"Midwest", "South", "West", "East"}
+	conferences := []string{"East", "West"}
 
-	var finalFour []int
-	for _, regionName := range regions {
-		winner := runRegionSimulation(regionName)
+	var finals []int
+	for _, confName := range conferences {
+		conferenceSeedWinner := runConferenceSimulation(confName)
+		
 
-		finalFour = append(finalFour, winner)
+		
+		
+		finals = append(finals, conferenceSeedWinner)
 
 	}
 
-	CalculateAndPrintFinalFourResults(finalFour, regions)
+	eastWins := FindWinner(finals[0], finals[1])
+	if eastWins {
+		fmt.Println("East wins, winner seed: " + strconv.Itoa(finals[0]))
+	} else {
+		fmt.Println("West wins, winner seed: " + strconv.Itoa(finals[1]))
+	}
 }
 
-func runRegionSimulation(region string) int {
+
+
+
+
+
+
+
+
+
+
+//FindWinner returns true if eastSeed wins, false if westSeed wins
+func FindWinner(eastSeed, westSeed int) bool {
+
+	rand.Seed(time.Now().UnixNano())
+	randNumber := getRandomNumber()
+
+	return randNumber <= .5
+}
+
+func runConferenceSimulation(region string) int {
 	fmt.Println("==========================================================")
 	underline := strings.Repeat("-", 16+len(region))
 	fmt.Printf("%s region results: \n", region)
 	fmt.Println(underline)
 
 	var confSeeds []int
-	for i := 0; i < 16; i++ {
+	for i := 0; i < 8; i++ {
 		seed := i + 1
 		confSeeds = append(confSeeds, seed)
 
 	}
 
 	r1m := GetMatchups(confSeeds)
-	//	PrintRoundMatchups(r1m, 1)
+	PrintRoundMatchups(r1m, 1)
 
 	r1r := GetMatchupResults(r1m)
+
+	//return r1r
+	sort.Ints(r1r)
+
 	r2m := GetMatchups(r1r)
 	PrintRoundMatchups(r2m, 2)
 
@@ -55,15 +88,14 @@ func runRegionSimulation(region string) int {
 	PrintRoundMatchups(r3m, 3)
 
 	r3r := GetMatchupResults(r3m)
-	r4m := GetMatchups(r3r)
-	PrintRoundMatchups(r4m, 4)
+	//r4m := GetMatchups(r3r)
 
-	r4r := GetMatchupResults(r4m)
-
-	winner := r4r[0]
-	fmt.Printf("Winner of region: %d\n\n", winner)
-
+	//r4r := GetMatchupResults(r4m)
+	winner := r3r[0]
+	fmt.Println("Conference winner: " + strconv.Itoa(winner))
 	return winner
+	
+
 
 }
 

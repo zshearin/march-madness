@@ -64,6 +64,7 @@ func CalculateAndPrintFinalFourResults(finalFour []int, regions []string) {
 
 }
 
+
 func printResults(printChamp1, printChamp2, finalChampion string, finalFour []int, regions []string) {
 
 	var initialRound []string
