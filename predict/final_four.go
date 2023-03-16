@@ -26,23 +26,23 @@ func CalculateAndPrintFinalFourResults(finalFour []int, regions []string) {
 	bracket3Winner := finalFour[2]
 	bracket4Winner := finalFour[3]
 
-	result1 := finalFourResult(bracket1Winner, bracket4Winner)
+	result1 := finalFourResult(bracket1Winner, bracket3Winner)
 	if result1 {
 		champ1Str = regions[0]
 		champ1 = finalFour[0]
 	} else {
-		champ1Str = regions[3]
-		champ1 = finalFour[3]
+		champ1Str = regions[2]
+		champ1 = finalFour[2]
 	}
 
-	result2 := finalFourResult(bracket2Winner, bracket3Winner)
+	result2 := finalFourResult(bracket2Winner, bracket4Winner)
 
 	if result2 {
 		champ2Str = regions[1]
 		champ2 = finalFour[1]
 	} else {
-		champ2Str = regions[2]
-		champ2 = finalFour[2]
+		champ2Str = regions[3]
+		champ2 = finalFour[3]
 	}
 
 	result3 := finalFourResult(champ1, champ2)
@@ -80,11 +80,11 @@ func printResults(printChamp1, printChamp2, finalChampion string, finalFour []in
 
 	fmt.Printf("___ %s\n", initialRound[0])
 	fmt.Printf("                   |___ %s %s\n", printChamp1, afterChamp1)
-	fmt.Printf("___ %s|                 |\n", initialRound[3])
+	fmt.Printf("___ %s|                 |\n", initialRound[2])
 	fmt.Printf("                                     |___ %s____ \n", finalChampion)
 	fmt.Printf("___ %s                  |\n", initialRound[1])
 	fmt.Printf("                   |___ %s %s|\n", printChamp2, afterChamp2)
-	fmt.Printf("___ %s|\n", initialRound[2])
+	fmt.Printf("___ %s|\n", initialRound[3])
 }
 
 //returns true if results expected (not an upset)
