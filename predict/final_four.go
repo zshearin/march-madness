@@ -1,4 +1,4 @@
-package main
+package predict
 
 import (
 	"fmt"
@@ -10,11 +10,8 @@ import (
 func CalculateAndPrintFinalFourResults(finalFour []int, regions []string) {
 
 	for index, regionName := range regions {
-
 		space := strings.Repeat(" ", 8-len(regionName))
-
 		fmt.Printf("%s winner: %s%d\n", regionName, space, finalFour[index])
-
 	}
 
 	fmt.Printf("\nFinal Four Matchups and Results: \n\n")
@@ -26,27 +23,28 @@ func CalculateAndPrintFinalFourResults(finalFour []int, regions []string) {
 	bracket3Winner := finalFour[2]
 	bracket4Winner := finalFour[3]
 
-	result1 := finalFourResult(bracket1Winner, bracket3Winner)
+	// 1 vs. 2 and result
+	result1 := finalFourResult(bracket1Winner, bracket2Winner)
 	if result1 {
 		champ1Str = regions[0]
 		champ1 = finalFour[0]
 	} else {
-		champ1Str = regions[2]
-		champ1 = finalFour[2]
+		champ1Str = regions[1]
+		champ1 = finalFour[1]
 	}
 
-	result2 := finalFourResult(bracket2Winner, bracket4Winner)
-
+	// 3 vs. 4 and result
+	result2 := finalFourResult(bracket3Winner, bracket4Winner)
 	if result2 {
-		champ2Str = regions[1]
-		champ2 = finalFour[1]
+		champ2Str = regions[2]
+		champ2 = finalFour[2]
 	} else {
 		champ2Str = regions[3]
 		champ2 = finalFour[3]
 	}
 
+	//Championship matchup
 	result3 := finalFourResult(champ1, champ2)
-
 	if result3 {
 		champion = champ1
 		championStr = champ1Str
@@ -80,9 +78,9 @@ func printResults(printChamp1, printChamp2, finalChampion string, finalFour []in
 
 	fmt.Printf("___ %s\n", initialRound[0])
 	fmt.Printf("                   |___ %s %s\n", printChamp1, afterChamp1)
-	fmt.Printf("___ %s|                 |\n", initialRound[2])
+	fmt.Printf("___ %s|                 |\n", initialRound[1])
 	fmt.Printf("                                     |___ %s____ \n", finalChampion)
-	fmt.Printf("___ %s                  |\n", initialRound[1])
+	fmt.Printf("___ %s                  |\n", initialRound[2])
 	fmt.Printf("                   |___ %s %s|\n", printChamp2, afterChamp2)
 	fmt.Printf("___ %s|\n", initialRound[3])
 }
