@@ -1,10 +1,9 @@
-package main
+package predict
 
 import (
 	"fmt"
 	"math/rand"
 	"strings"
-	"time"
 )
 
 //Matchup denotes a matchup
@@ -13,21 +12,13 @@ type Matchup struct {
 	HigherSeed int
 }
 
-func main() {
-
-	rand.Seed(time.Now().UnixNano())
-
-	regions := []string{"Midwest", "South", "West", "East"}
-
+func RunRegionSimulationsAndGetFinalFour(regions []string) []int {
 	var finalFour []int
 	for _, regionName := range regions {
 		winner := runRegionSimulation(regionName)
-
 		finalFour = append(finalFour, winner)
-
 	}
-
-	CalculateAndPrintFinalFourResults(finalFour, regions)
+	return finalFour
 }
 
 func runRegionSimulation(region string) int {
@@ -40,44 +31,37 @@ func runRegionSimulation(region string) int {
 	for i := 0; i < 16; i++ {
 		seed := i + 1
 		confSeeds = append(confSeeds, seed)
-
 	}
 
-	r1m := GetMatchups(confSeeds)
-	//	PrintRoundMatchups(r1m, 1)
+	matchupsRound1 := GetMatchups(confSeeds)
 
-	r1r := GetMatchupResults(r1m)
-	r2m := GetMatchups(r1r)
-	PrintRoundMatchups(r2m, 2)
+	resultsRound1 := GetMatchupResults(matchupsRound1)
+	matchupsRound2 := GetMatchups(resultsRound1)
+	PrintRoundMatchups(matchupsRound2, 2)
 
-	r2r := GetMatchupResults(r2m)
-	r3m := GetMatchups(r2r)
-	PrintRoundMatchups(r3m, 3)
+	resultsRound2 := GetMatchupResults(matchupsRound2)
+	matchupsRound3 := GetMatchups(resultsRound2)
+	PrintRoundMatchups(matchupsRound3, 3)
 
-	r3r := GetMatchupResults(r3m)
-	r4m := GetMatchups(r3r)
-	PrintRoundMatchups(r4m, 4)
+	resultsRound3 := GetMatchupResults(matchupsRound3)
+	matchupsRound4 := GetMatchups(resultsRound3)
+	PrintRoundMatchups(matchupsRound4, 4)
 
-	r4r := GetMatchupResults(r4m)
+	resultsRound4 := GetMatchupResults(matchupsRound4)
 
-	winner := r4r[0]
+	winner := resultsRound4[0]
 	fmt.Printf("Winner of region: %d\n\n", winner)
-
 	return winner
-
 }
 
 //PrintRoundMatchups prints the matchups for a round
 func PrintRoundMatchups(matchups []Matchup, roundNumber int) {
 
 	fmt.Printf("Round %d matchups: ", roundNumber)
-
 	for _, value := range matchups {
 		fmt.Printf("%d vs. %d   ", value.LowerSeed, value.HigherSeed)
 	}
 	fmt.Printf("\n")
-	//	fmt.Println(matchups)
-
 }
 
 //GetMatchupResults gets the result array from the provided matchup
@@ -106,9 +90,7 @@ func GetMatchupResults(matchups []Matchup) []int {
 //GetMatchups gets the matchups from the int array
 func GetMatchups(round1Results []int) []Matchup {
 
-	//
 	var matchups []Matchup
-
 	for len(round1Results) > 1 {
 
 		var first, last int

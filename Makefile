@@ -1,5 +1,5 @@
 build:
-	go build ./predict
+	go build main.go
 
 run:
-	go run ./predict
+	go run main.go
